@@ -1,4 +1,4 @@
-FROM janeczku/alpine-kubernetes:3.2
+FROM alpine:latest
 
 RUN apk --update add \
     rsyslog \
@@ -9,9 +9,10 @@ RUN apk --update add \
   && : adding gnuplot for graphing \
   && apk add gnuplot \
     --update-cache \
-    --repository http://dl-3.alpinelinux.org/alpine/edge/testing/
+    --repository http://dl-3.alpinelinux.org/alpine/edge/community/ \
+    --repository http://dl-3.alpinelinux.org/alpine/edge/main/
 
-ENV TSDB_VERSION 2.2.0
+ENV TSDB_VERSION 2.3.0
 ENV HBASE_VERSION 1.1.3
 ENV JAVA_HOME /usr/lib/jvm/java-1.7-openjdk
 ENV PATH $PATH:/usr/lib/jvm/java-1.7-openjdk/bin/
@@ -67,7 +68,10 @@ RUN for i in /opt/bin/start_hbase.sh /opt/bin/start_opentsdb.sh /opt/bin/create_
 RUN mkdir -p /etc/services.d/hbase /etc/services.d/tsdb
 RUN ln -s /opt/bin/start_hbase.sh /etc/services.d/hbase/run
 RUN ln -s /opt/bin/start_opentsdb.sh /etc/services.d/tsdb/run
+RUN chmod +x /opt/bin/start_hbase.sh /opt/bin/start_opentsdb.sh
 
 EXPOSE 60000 60010 60030 4242 16010
 
 VOLUME ["/data/hbase", "/tmp"]
+
+CMD ["/opt/bin/start_opentsdb.sh"]

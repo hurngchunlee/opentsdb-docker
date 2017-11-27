@@ -1,4 +1,7 @@
 #!/bin/bash
+
+/opt/bin/start_hbase.sh &
+
 export TSDB_VERSION="::TSDB_VERSION::"
 echo "Sleeping for 30 seconds to give HBase time to warm up"
 sleep 30 
